@@ -1,0 +1,130 @@
+3 types of gradient descent:-
+1) Batch Gradient Descent: Parameters get updated after the entire examples are processed; also known as epoch gradient descent
+2) Stochastic Gradient Descent: Parameters get updated after each example is processed
+3) mini batch Gradient Descent: Paramenters get updated after each mini batch is processed; combo of Batch and Stochastic
+
+data snooping bias: overfitting
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Model Parameter: configuration varaible, internal to model, whose value can be estimated from data
+Examples:
+1) weights in artificial neural network
+2) support vectors in SVM
+3) theta in Linear and Logistic Regression
+
+Model Hypermeter: configuration external to model whose value cannot be estimated from data
+Examples:
+1) learing rate for training a neural network
+2) C and sigma in support vector Machine
+3) k in KNNs
+
+If you have to specify a model parameter manually than it's probably a model hyperparameter
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+Chp #1:
+prediction = inference
+
+CHAPTER # 2:
+
+Stratified Sampling: take examples from each startum in the test set so that actual representation from population is maintained. 49% men and 51% women in society.
+
+pd.cut: used when data values need to be transformed from continuous to categorical
+
+Permanent effects:
+-) housing.drop('attribute', axis=1, inplace=True)
+-) housing = housing.drop('attribute', axis=1)
+
+Temporary effects:
+-) housing.drop('attribute', axis=1) # Without keyword inplace
+-) housing.drop('attribute', axis=1) # Without =
+
+iloc: till particular index
+loc: till particular value in index
+
+
+
+Data Cleaning:-
+1) getting rid of rows: pd.dropna(subset=["list of attributes"])
+2) removing columns: pd.drop("col_name", axis=1)
+3) replacing with median: using sklearn.preprocessing's imputer
+
+
+
+Handling Categorical attributes thru one-hot encoding
+If you have large number of categories then one-hot encoding will result in large number of features, slowing down performance of the model.
+Soln:
+-) replace cateorical with numerical features
+-) replace each category with learnable low dimension vector called embedding. Each category is learned during training. See chp#13
+
+Use custom transformers for extra attribs[hyperparameter]
+
+
+
+Feature Scaling:-
+Min-max Scaling(Normalization): range is 0-1, MinMaxScaler is Sklearn's transformer for it, change feature_range hypermeter if u don't wanna range of 0-1
+Standardization: subtract mean then divide by sd. range not in 0-1, adv: less affected by outliers, StandardScaler is sklearn's transformer for it
+REMEMBER: fit the scalers to the training data only, not to the full dataset. Then use it to transform the full dataset
+
+
+
+Transformation Pipelines:
+Purpose: to help with sequence of transformations
+
+
+
+GridSearchCV:-
+We tell it which hyperparameters we wanna play with, and what values we wanna try out, and it will try out all possible values using cross-validation
+Each combination is given in a dictionary.
+It acts as a model as it has a fit method.
+
+grid_search.best_estimator_ :- returns final model
+grid_search.best_params_ :- returns the best parameters
+
+
+RandomizedSearhCV:-
+Used instead of GridSearchCV when hyperparameter search space is large
+It evaluates a given number of random combinations by selecting a random value of each hyperparameter at every iteration
+
+
+-----------------------------------------------*************************************************************************************---------------------------------------------
+
+CHAPTER # 3:
+
+Some algos are sensitive to order of training instances, they perform poorly if they get many similar instances in a row
+performance evaluation of classifiers is more difficult than of regressor
+
+clone - copies model
+StratifiedKFold: performs stratified sampling for classification
+
+Accuracy is not the prefered performance metric for classifiers; especially for skewed datasets
+
+For high Precision false positive should be low
+For high Recall false negative should be low
+Incresing threshold: causes Precision▲ and recall ▼ and vice versa
+
+F1 score is used to compare 2 classifiers, it's the harmonic mean of precision and recall
+
+ROC curve plots TP rate against FP rate
+Area Under Curve(AUC) is used to compare classifiers; 1 being perfect, 0.5 for random classifiers
+
+Prefer Precision-Recall curve when:
+1) Positive class is rare
+2) We care about FP more than FN
+and ROC otherwise
+
+Multiclass Classification:
+For binary classifiers OvA strategy is used except for SVM for which OvO strategy is used.
+
+In Confusion Matrix plot:-  
+- If col is bright that means many are misclassified in the class, HIGH false positive  
+- If row is bright; means that many in the actual class are not properly classified, HIGH false negative
+
+To solve the problem of misclassification:-
+- We can add numbers similar to 8 like 3, 5 so that classifier can learn to distinguish them from real 8
+- we could feature engineer new features that would help the classifier like count the closed loops 8 has 2, 5 has none, 6 has one-hot
+- we could preprocess image
+
+KNN is a multilabel classifier
