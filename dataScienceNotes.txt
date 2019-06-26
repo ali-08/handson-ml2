@@ -64,7 +64,7 @@ Use custom transformers for extra attribs[hyperparameter]
 
 
 Feature Scaling:-
-Min-max Scaling(Normalization): range is 0-1, MinMaxScaler is Sklearn's transformer for it, change feature_range hypermeter if u don't wanna range of 0-1
+Min-max Scaling(Normalization): range 0-1, MinMaxScaler is Sklearn's transformer for it, change feature_range hypermeter if u don't wanna range of 0-1
 Standardization: subtract mean then divide by sd. range not in 0-1, adv: less affected by outliers, StandardScaler is sklearn's transformer for it
 REMEMBER: fit the scalers to the training data only, not to the full dataset. Then use it to transform the full dataset
 
@@ -72,6 +72,7 @@ REMEMBER: fit the scalers to the training data only, not to the full dataset. Th
 
 Transformation Pipelines:
 Purpose: to help with sequence of transformations
+Parameter: list of (name, transform) tuples (implementing fit/transform) that are chained
 
 
 
@@ -97,9 +98,17 @@ Some algos are sensitive to order of training instances, they perform poorly if 
 performance evaluation of classifiers is more difficult than of regressor
 
 clone - copies model
+
 StratifiedKFold: performs stratified sampling for classification
 
+cross_val_predict returns predictions which are used in confusion matrix along with labels
+
 Accuracy is not the prefered performance metric for classifiers; especially for skewed datasets
+
+SGDClassifier has a decision function, if the score is greater than threshold, it is assigns the instance to positive class, or else it assigns it to negative class
+Sklearn doesn't allow to set the threshold directly
+
+
 
 For high Precision false positive should be low
 For high Recall false negative should be low
@@ -128,3 +137,60 @@ To solve the problem of misclassification:-
 - we could preprocess image
 
 KNN is a multilabel classifier
+
+
+
+Titanic:-
+
+for missing Cat attributes, impute it with most repeated one
+
+
+SVM:-
+gamma is a parameter for non-linear hyperparameters. the higher the value the more it tries to fit the training dataset
+C controls the tradeoff between smooth decision boundary and classifying the point correctly. Increasing it tends to overfitting.
+degree is the parameter when kernel is set to poly. It is basically the degree of polynomial used
+
+NEW GOOD LIB for Data Visualisation:
+conda install pandas_profiling. See Chp#3-Exercise-B.ipynb
+
+-----------------------------------------------*************************************************************************************---------------------------------------------
+
+CHP#4:
+
+The more the parameters, the more prone to overfitting
+
+Normal Equation:- 
+Formula: inv(Xt . X) . Xt . y 
+Computational Complexity: O(n^3)
+
+The SVD approach used by sklearn's LinearRegression class is about O(n^2)
+
+Gradient Descent is guranteed to approach arbitarily close to global min if we wait long enough and learning rate is not too high
+
+When using Gradient Descent make sure that all the features have similar scale(use sklearn's standardScaler) else it will take longer to converge
+
+We can use GridSearch to find good learning rate
+
+Main Problem with BGD is that it uses the entire dataset to compute the gradients at every step, which makes it slow.
+
+Stochastic Gradient Descent picks a random instance in the training set and computes the gradients based only on that single instance
+
+When the cost function is very irregular, SGD has a better chance of finding the global minimum than Batch Gradient Descent
+
+
+If your model is underfitting the training data, adding more training examples will not help. You need to use a more complex model or come up with better features.
+Overfitting model can be improved by providing it with more training data until val error reaches the training error
+
+
+Learning Curves: 
+plots of model performance on training set and validation set as a function of training set size,
+to generate these, simply train the model several times on different sized subsets of training set
+
+
+Bias/variance tradeoff:
+Model's Generalization error can be expressed as the sum of three very different errors
+Bias: Part of the generalziation error due to wrong assumption; occurs when model underfits
+Variance: Part of the generalziation that occurs due to model's excessive sensitivity to small variations in the training data
+Irreducible error: Part due to the noisiness of the data itself. Only way to reduce is to clean up the data.
+
+Increasing a model's complexity will typically increase its variance and reduce its bias.
