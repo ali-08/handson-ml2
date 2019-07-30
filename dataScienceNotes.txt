@@ -105,19 +105,26 @@ cross_val_predict returns predictions which are used in confusion matrix along w
 
 Accuracy is not the prefered performance metric for classifiers; especially for skewed datasets
 
+skewed datasets - when some classes occur more frequently than others
+
 SGDClassifier has a decision function, if the score is greater than threshold, it is assigns the instance to positive class, or else it assigns it to negative class
 Sklearn doesn't allow to set the threshold directly
 
+cross_val_predict: returns clean prediction for each instance in the training set; clean means that prediction made by the model never saw the data during training
+
+Performance Evaluation:
+1) Confusion Matrix used for binary classifers
+2) ROC Curve used for binary classifers
 
 
 For high Precision false positive should be low
 For high Recall false negative should be low
-Incresing threshold: causes Precision▲ and recall ▼ and vice versa
+Incresing threshold: causes Precision ▲ and recall ▼ and vice versa
 
 F1 score is used to compare 2 classifiers, it's the harmonic mean of precision and recall
 
 ROC curve plots TP rate against FP rate
-Area Under Curve(AUC) is used to compare classifiers; 1 being perfect, 0.5 for random classifiers
+Area Under Curve(AUC) is used to compare classifiers; 1 being perfect, 0.5 for random classifiers; use roc_auc_score
 
 Prefer Precision-Recall curve when:
 1) Positive class is rare
@@ -125,6 +132,8 @@ Prefer Precision-Recall curve when:
 and ROC otherwise
 
 Multiclass Classification:
+Can distinguish between more than 2 classes
+
 For binary classifiers OvA strategy is used except for SVM for which OvO strategy is used.
 
 In Confusion Matrix plot:-  
@@ -157,7 +166,7 @@ conda install pandas_profiling. See Chp#3-Exercise-B.ipynb
 
 CHP#4:
 
-The more the parameters, the more prone to overfitting
+The more the number of parameters, the more prone to overfitting
 
 Normal Equation:- 
 Formula: inv(Xt . X) . Xt . y 
@@ -186,6 +195,9 @@ Learning Curves:
 plots of model performance on training set and validation set as a function of training set size,
 to generate these, simply train the model several times on different sized subsets of training set
 
+Regularization:-
+Regularization significantly reduces the variance of the model, without substantial increase in bias
+Till a point, the increase in alpha is beneficial as it is only reducing the variance(hence avoiding overfitting), without loosing any important properties in the data
 
 Bias/variance tradeoff:
 Model's Generalization error can be expressed as the sum of three very different errors
@@ -194,3 +206,97 @@ Variance: Part of the generalziation that occurs due to model's excessive sensit
 Irreducible error: Part due to the noisiness of the data itself. Only way to reduce is to clean up the data.
 
 Increasing a model's complexity will typically increase its variance and reduce its bias.
+
+
+Polynomial models are regularized by reducing the number of polynomial degrees
+
+Scaling is necessary before regularization
+
+Regularized Linear Model:
+Done for reducing overfitting
+For polynomial model, reduce the number of polynomial degrees
+For linear model, regularization is acheived by constraining the weights of the model
+
+1) Ridge Regression:
+a regularization term is added to the cost function
+ensures that model weights are as small as possible
+hyperparameter alpha controls how much you want to regularize the model
+Increasing alpha leads to flatter predictions, reducing model's variance but increasing bias
+
+2) Lasso Regression:
+it completely eliminates the weights of least important features; very close to 0
+It also performs variable selection and yield sparse models
+
+3) Elastic Net:
+middle ground between Ridge and Lasso
+Used when dataset is large
+
+Difference between Ridge and Lasso:
+Ridge does not forces the theta parameter to be 0; this means that irrelevant parameters would be minimized but not eliminated
+Lasso overcomes this by actually setting the irrelevant attributes parameters to be 0
+
+Early Stopping:
+Another way to regularize iterative learning algorithms suxh as gradient descent is to stop training as soon as validation error reaches minimum
+"beautiful free lunch"
+
+
+Logistic Regression:
+Regression for classification
+
+Softmax Regression / multinomial logistic regression: 
+Regression for multiclass classification
+See formula
+
+-----------------------------------------------*************************************************************************************---------------------------------------------
+
+Chp#5(SVM) Classification:
+
+Capable of performing linear or nonlinear regression, classification and outlier detection
+Suitable for complex but small or medium sized datasets
+
+fits the widest possible street between classes. That's why it's called large margin classification
+
+Support vectors: instances at the edge of the cluster and near the decision boundary of SVM
+
+SVMs are sensitive to the feature scales
+
+
+Hard margin SVM only works when data is:-
+1- linearly seperable
+2- without error(outliers or noise)
+
+Soft margin classification: find a good balance i.e. keep the street as wide as possible and limit margin violations; in short large margin vs margin violations
+this balance is controlled using C hyperparameter in Scikit-Learn
+C is inversly propotional to margin length
+
+If overfitting reduce C
+
+SVM classifiers do not output probabilities for each class
+
+Kernel Trick: makes possible to get the same results as if we add many polynomial features without actually adding them [google search]
+
+coef0: controls how much model is concerned with high-degree polynomials vs low-degree polynomials
+
+RBF Kernel:
+Increasing gamma makes bell-shape curve narrower, decision boundary becomes more irregular 
+
+γ acts like a regularization hyperparameter: if your model is overfitting, you should reduce it, and if it is underfitting,
+you should increase it (similar to the C hyperparameter).
+
+
+As a rule of thumb, always try the linear kernel first, especially when the training set is large or if it has plenty of features
+LinearSVC  is much faster than SVC(kernel="linear")
+Try Guassian RBF if training set isn't too large
+Ohter kernels exist but are used rarely.
+String kernel is used for document classification or DNA analysis
+
+SVM Regression:
+goal is to fit as many instances as possible on the street with minimum margin violations
+ϵ - controls the width of street
+
+
+Training a linear SVM classifier means finding the value of w and b that
+make this margin as wide as possible while avoiding margin violations (hard margin)
+or limiting them (soft margin)
+
+online learning means learning incrementally, typically as new instances arrive
