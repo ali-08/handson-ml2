@@ -300,3 +300,25 @@ make this margin as wide as possible while avoiding margin violations (hard marg
 or limiting them (soft margin)
 
 online learning means learning incrementally, typically as new instances arrive
+
+-----------------------------------------------*************************************************************************************---------------------------------------------
+
+Chp#6:
+
+Decision trees are used for regression and classification
+
+They don't require feature scaling at all
+
+CART produces only binary trees, ID3 produce Decision Trees that have more than two children
+CART splits the training set into 2 subsets using a single feature k and a threshold tk
+CART is a greedy algorithm
+
+Gini vs Entorpy
+Most of the time it doesn't make a big difference
+Gini is slightly faster so a good default
+Entropy produces slightly more balanced trees
+
+Nonparametric model: it surely does has parameters, but number of parameters are not determined prior to training
+
+Increasing min_* hyperparameters or reducing max_* hyperparameters will regularize the model.
+
