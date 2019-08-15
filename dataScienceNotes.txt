@@ -215,7 +215,7 @@ Scaling is necessary before regularization
 Regularized Linear Model:
 Done for reducing overfitting
 For polynomial model, reduce the number of polynomial degrees
-For linear model, regularization is acheived by constraining the weights of the model
+For linear model, regularization is achieved by constraining the weights of the model
 
 1) Ridge Regression:
 a regularization term is added to the cost function
@@ -321,4 +321,73 @@ Entropy produces slightly more balanced trees
 Nonparametric model: it surely does has parameters, but number of parameters are not determined prior to training
 
 Increasing min_* hyperparameters or reducing max_* hyperparameters will regularize the model.
+
+See Random Forest(last ques in Ex)
+
+-----------------------------------------------*************************************************************************************---------------------------------------------
+
+Chp#7:
+
+Ensemble - Group of Predictors
+
+Hard voting classifier: majority-vote classifier
+
+If each classifier is a weak learner(slightly better than random guessing), then ensemble can still be a strong learner, provided that
+1- there are sufficient number of weak learners
+2- they are diverse
+
+Ensemble methods work best when the predictors are as independent from one another as possible. One way to get diverse classifiers is to train them using very different algorithms.
+This increases the chance that they will make very different types of errors, improving the ensemble’s accuracy.
+
+In hard voting (also known as majority voting), every individual classifier votes for a class, and the majority wins. In statistical terms, the predicted target label of the 
+ensemble is the mode of the distribution of individually predicted labels.[Majority voting]
+
+Soft voting: If all the classifiers are able to estimate class probabilities then you can tell Scikit-Learn to predict the class with highest class probability, averaged over all
+individual classifiers. It often achieves higher accuracy than hard voting.
+
+In soft voting, every individual classifier provides a probability value that a specific data point belongs to a particular target class. The predictions are weighted by the 
+classifier's importance and summed up. Then the target label with the greatest sum of weighted probabilities wins the vote.[Weighted Average]
+
+Another approach is to use same training algorithm for every predictor, but train them on different random subsets:
+1- Bagging: when sampling is performed with replacement
+2- Pasting: when sampling is performed without replacement
+
+Out-of-Bag Evaluation:
+While bagging, some examples are selected several times while others may not be selected at all.
+By defualt a BaggingClassifier samples m training instances with replacement(bootstrap=True), where m is the size of training set
+63% of training examples are sampled on average for each predictor.
+Remanining 37% that are not sampled are called out-of-bag (oob) instances. Note that they are not the same 37% for all predictors
+
+Aggregation Function for:
+1- Classification is statistical mode
+2- Regression is average
+Aggregation reduces both bias and variance
+Net result is that it has the same bias as a single predictor but lower variance
+
+The n_jobs parameter tells Scikit-Learn the number of CPU cores to use for training and predictions
+(–1 tells Scikit-Learn to use all available cores)
+
+Random Forest:
+When you are growing a random forest, at each node only a random subset of the features is considered for splitting
+Can also tell feature importance
+
+Boosting:
+train predictors sequentially, each trying to correct its predecessor
+
+If your AdaBoost ensemble is overfitting the training set, you can try reducing the number of estimators or more strongly regularizing the base estimator
+
+Gradient Boosting:
+Instead of tweaking instance weights at every iteration like AdaBoost does, this method tries to fit the new predictor to the residual errors made by previous predictors
+
+Scikit-Learn's GradientBoostingRegressor class is used to train GBRT ensembles; it has hyperparameter:
+max_depth, min_sample_leaf control the growth of decision trees, 
+n_estimators control the ensemble training
+
+Shrinkage is a regularization technique in which learning_rate hyperparameter scales the contribution of each tree. If it is low, such as 0.1, we will need more trees in the 
+ensembe to fit the training set, but the predictions will generalize better.
+
+XGBoost:
+Similar to Scikit-Learn in terms of functionality. Used to perform Gradient Boosting.
+
+-----------------------------------------------*************************************************************************************---------------------------------------------
 
