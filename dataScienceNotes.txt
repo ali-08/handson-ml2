@@ -5,7 +5,25 @@
 
 data snooping bias: overfitting
 
+Norms:
+The L1 norm that is calculated as the sum of the absolute values of the vector.
+||v||1 = |a1| + |a2| + |a3|
+[1 2 3]
+ 
+6.0
 
+The L2 norm that is calculated as the square root of the sum of the squared vector values.
+||v||2 = sqrt(a1^2 + a2^2 + a3^2)
+
+[1 2 3]
+ 
+3.74165738677
+
+The max norm that is calculated as the maximum vector values.
+ 	
+[1 2 3]
+ 
+3.0
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Model Parameter: configuration varaible, internal to model, whose value can be estimated from data
 Examples:
@@ -367,6 +385,10 @@ Net result is that it has the same bias as a single predictor but lower variance
 The n_jobs parameter tells Scikit-Learn the number of CPU cores to use for training and predictions
 (–1 tells Scikit-Learn to use all available cores)
 
+Random Patches and Random Subspaces:
+The BaggingClassifier supports sampling the features as well.
+This is controlled by two hyperparameters: max_features and bootstrap_features
+
 Random Forest:
 When you are growing a random forest, at each node only a random subset of the features is considered for splitting
 Can also tell feature importance
@@ -391,3 +413,74 @@ Similar to Scikit-Learn in terms of functionality. Used to perform Gradient Boos
 
 -----------------------------------------------*************************************************************************************---------------------------------------------
 
+Chp#8:
+
+Curse of Dimensionality: many ml problems have thousands or even millions of features. This make training extremly slow and finding solution difficult
+
+Training speed is surely increased but at the cost of some information loss
+It's also extremly useful for DataViz
+It all depends on data; sometimes it does not provide better solution
+High dimensional datasets are at risk of being very sparse: most training instances are likely to be far away from each other
+
+The more dimensions the training set has, the greater the risk of overfitting
+
+curse of dimensionality can be avoided by increasing the training examples, however, it is impossible bcs for that you would need more training instances than atoms in observable universe
+
+See book for projection and Manifold Learning
+
+Projection: 
+All the training instances are projected onto a lower-dimensional subspace
+Note always good approach as in many cases subspace may twist and turn as in Swiss roll
+
+Manifold Learning:
+generally, a d-dimensional manifold is a part of an n-dimensional space (where d < n) that locally resembles a d-dimensional hyperplane. In the case of the Swiss roll, 
+d = 2 and n = 3: it locally resembles a 2D plane, but it is rolled in the third dimension.
+Manifold Learning: Many dimensionality reduction algorithms work by modelling the manifold on which training instances lie
+
+PCA:
+Unsupervised
+First it identifies the hyperplane(axis) that lies closest to the data, then projects the data onto it
+Selects the axis that preserves the maximum amount of variance, as it will most likely lose less information than other projections
+It assumes that data is centred around the origin. In Scikit-Learn it is automatically done.
+
+Explained Variance Ratio: indicates the propotion of dataset's variance that lies alongside the axis of each principal component
+It can be said that the more the variance that lies alongside the axis, the more the information it contains
+For example, if the first principal component contains 72% and the second principal component contains 23% then two components together contain 95% of the information
+
+Choosing the right number of dimensions(n_components):
+Dimensions are not chosen arbitarily.
+Preferably choose dimensions that contain approx 95% of variance.
+for dataviz reduce down to 2 or 3
+
+We can get the initial dataset with orignal dimensions by inverse transformation of PCA projection
+
+The mean squared distance between the orignal data and reconstructed data(compressed and then decompressed) is called reconstruction error
+
+Incremental PCA:
+Preeceding implementations of PCA require whole training data to fit in the memory so that algorithm can run.
+IPCA allows to split the training data into mini batches so that IPCA can be fed with one mini-batch at a time.
+Used for large training sets
+
+Randomized PCA:
+quickly finds an approximation of the first d components.
+Scikit-Learn automatically uses randomized PCA when m or n is greater than 500 and d is less than 80% of m or n, or else it uses the full SVD approach
+
+Kernel PCA:
+Useful for nonlinear datasets
+Allows to perform complex nonlinear projections for dimensionality reduction.
+Good at preserving clusters of instances after projection, or even sometimes unrolling datasets that lie close to twisted manifold.
+
+LLE:
+Locally Linear Embedding: powerful nonlinear dimensionality reduction technique(NLDR)
+It is a Manifold Learning Technique; doesn't rely on projections
+It works by measuring how each instance linearly relates to its closest neighbours, and then looking for a low-dimension representation of the training sets where these locations 
+are best preserved
+It is good when there is not too much noise
+
+Suppose you perform PCA on a 1,000-dimensional dataset, setting the explained variance ratio to 95%. How many dimensions will the resulting dataset have?
+Ans: Depends upon the dataset. It points are perfectly alligned, PCA will reduce the dataset down to 1 dimension and preserve 95% of the variance.
+If the points are totally random, then we could have 1 to 1000 dimensions in order to preserve 95% of variance.
+
+Evaluate the performance of dimensionality reduction algo:_
+1) perform reverse transformation and calculate the reconstruction error
+2) when it cannot be reversed, then use dimensionality reduction as pre-processsing and measure the performance of second algorithm
